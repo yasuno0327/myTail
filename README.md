@@ -27,7 +27,7 @@ myTail -n=2 hogehoge.txt
 
 ### Output many files
 
-Show last 10 lines of two file.
+Show last 2 lines of two file.
 
 ```
 myTail -n=2 hogehoge.txt fugafuga.txt
