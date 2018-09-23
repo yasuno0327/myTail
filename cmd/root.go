@@ -1,33 +1,25 @@
-// Copyright © 2018 NAME HERE <EMAIL ADDRESS>
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package cmd
 
 import (
+	"bufio"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"sync"
 
 	"github.com/spf13/cobra"
 )
 
+var n int // 描写する行数
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "myTail",
 	Short: "myTail is go implementation of tail command",
 	Run:   AnalysisArgument,
+}
+
+func init() {
+	rootCmd.PersistentFlags().IntVar(&n, "n", 10, "Number of line that you want print.")
 }
 
 func AnalysisArgument(cmd *cobra.Command, args []string) {
@@ -43,26 +35,54 @@ func AnalysisArgument(cmd *cobra.Command, args []string) {
 	wg.Add(len(args))
 	for i := range args {
 		go func(filename string) {
-			PrintFile(filename, wd)
+			PrintFileN(n, filename, wd)
 			wg.Done()
 		}(args[i])
 	}
 	wg.Wait()
 }
 
-// ファイルの中身をプリントする
-func PrintFile(filename string, wd string) {
-	bytes, err := ioutil.ReadFile(wd + "/" + filename)
+// // ファイルの中身をプリントする (全て)
+// func PrintFile(filename string, wd string) {
+// 	bytes, err := ioutil.ReadFile(wd + "/" + filename)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		os.Exit(1)
+// 	}
+
+// 	fmt.Println(string(bytes), "\n")
+// }
+
+// 最後からn行分だけファイルの中身をプリントする
+func PrintFileN(n int, filename string, wd string) {
+	file, err := os.Open(wd + "/" + filename)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	fmt.Println(string(bytes), "\n")
+	// 最初にある程度容量を確保する(append高速化)
+	lines := make([]string, 0, 1000)
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	length := len(lines)
+	head := length - n
+	for i := 0; i < n && head < length; i++ {
+		output := lines[head]
+		fmt.Printf("%s\n", output)
+		head++
+	}
+	fmt.Println("")
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
