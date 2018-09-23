@@ -9,7 +9,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var n int // 描写する行数
+var (
+	n     int // 描写する行数
+	mutex sync.Mutex
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -67,12 +70,14 @@ func PrintFileN(n int, filename string, wd string) {
 		n = length
 	}
 	head := length - n // printする先頭行
+	mutex.Lock()
 	for i := 0; i < n && head < length; i++ {
 		output := lines[head]
 		fmt.Printf("%s\n", output)
 		head++
 	}
 	fmt.Println("")
+	mutex.Unlock()
 }
 
 func Execute() {
