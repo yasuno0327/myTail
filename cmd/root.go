@@ -42,17 +42,6 @@ func AnalysisArgument(cmd *cobra.Command, args []string) {
 	wg.Wait()
 }
 
-// // ファイルの中身をプリントする (全て)
-// func PrintFile(filename string, wd string) {
-// 	bytes, err := ioutil.ReadFile(wd + "/" + filename)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		os.Exit(1)
-// 	}
-
-// 	fmt.Println(string(bytes), "\n")
-// }
-
 // 最後からn行分だけファイルの中身をプリントする
 func PrintFileN(n int, filename string, wd string) {
 	file, err := os.Open(wd + "/" + filename)
@@ -74,7 +63,10 @@ func PrintFileN(n int, filename string, wd string) {
 	}
 
 	length := len(lines)
-	head := length - n
+	if n > length {
+		n = length
+	}
+	head := length - n // printする先頭行
 	for i := 0; i < n && head < length; i++ {
 		output := lines[head]
 		fmt.Printf("%s\n", output)
