@@ -14,7 +14,7 @@
 
 package main
 
-import "myTail2/cmd"
+import "myTail/cmd"
 
 func main() {
 	cmd.Execute()
