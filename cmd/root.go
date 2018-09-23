@@ -21,7 +21,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().IntVar(&n, "n", 10, "Number of line that you want print.")
+	rootCmd.PersistentFlags().IntVarP(&n, "n", "n", 10, "Number of line that you want print.")
 }
 
 func AnalyzeArgument(cmd *cobra.Command, args []string) {
