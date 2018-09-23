@@ -71,6 +71,7 @@ func PrintFileN(n int, filename string, wd string) {
 	}
 	head := length - n // printする先頭行
 	mutex.Lock()       // printの間だけ同期ロック
+	fmt.Printf("==> %s <==\n", filename)
 	for i := 0; i < n && head < length; i++ {
 		output := lines[head]
 		fmt.Printf("%s\n", output)
