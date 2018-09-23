@@ -10,6 +10,7 @@ import (
 
 var (
 	n     int        // 描写する行数
+	f     bool       // 監視するかどうか
 	mutex sync.Mutex // print用ロック
 )
 
@@ -22,6 +23,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.PersistentFlags().IntVarP(&n, "n", "n", 10, "Number of line that you want print.")
+	rootCmd.PersistentFlags().BoolVarP(&f, "f", "f", false, "")
 }
 
 func AnalyzeArgument(cmd *cobra.Command, args []string) {
@@ -38,6 +40,9 @@ func AnalyzeArgument(cmd *cobra.Command, args []string) {
 	for i := range args {
 		go func(filename string) {
 			PrintFileN(n, filename, wd)
+			if f {
+				WatchFile(n, filename, wd)
+			}
 			wg.Done()
 		}(args[i])
 	}
