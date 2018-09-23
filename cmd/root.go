@@ -10,22 +10,22 @@ import (
 )
 
 var (
-	n     int // 描写する行数
-	mutex sync.Mutex
+	n     int        // 描写する行数
+	mutex sync.Mutex // print用ロック
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "myTail",
 	Short: "myTail is go implementation of tail command",
-	Run:   AnalysisArgument,
+	Run:   AnalyzeArgument,
 }
 
 func init() {
 	rootCmd.PersistentFlags().IntVar(&n, "n", 10, "Number of line that you want print.")
 }
 
-func AnalysisArgument(cmd *cobra.Command, args []string) {
+func AnalyzeArgument(cmd *cobra.Command, args []string) {
 	// goルーチンで実行すると関数実行のほうが早く終わってしまうので
 	// 実行待ちチャネルを作る。
 	wg := &sync.WaitGroup{}
