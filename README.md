@@ -17,11 +17,15 @@ Show last 10 lines of file.
 myTail hogehoge.txt
 ```
 
+### n option
+
 Show last n lines of file.
 
 ```
 myTail -n=2 hogehoge.txt
 ```
+
+### Output many files
 
 Show last 10 lines of two file.
 
