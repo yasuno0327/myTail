@@ -21,8 +21,16 @@ myTail hogehoge.txt
 
 Show last n lines of file.
 
-```
+```shell
 myTail -n=2 hogehoge.txt
+```
+
+### w option
+
+Monitor the file
+
+```shell
+myTail -f hogehoge.txt
 ```
 
 ### Output many files
