@@ -13,6 +13,7 @@ func PrintFileN(n int, filename string, wd string) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	defer file.Close()
 
 	// 最初にある程度容量を確保する(append高速化)
 	lines := make([]string, 0, 1000)
