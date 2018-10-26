@@ -1,7 +1,6 @@
 # myTail
 
 ## Overview
-This is original implementation of tail command with golang.
 
 ## Usage
 
